@@ -1,0 +1,67 @@
+{% extends "public_template.html" %}
+
+{% block title %}Upload{% endblock %}
+
+{% block main %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+      <h1>Upload an audio (only .wav files)</h1>
+      <hr>
+
+      <form action="/upload-audio" method="POST" enctype="multipart/form-data">
+	      <div class="form-group">
+		      <label>Select audio file</label>
+		      <div class="custom-file">
+			      <input type="file" class="custom-file-input" name="image" id="image">
+			      <label class="custom-file-label" for="image">Select audio...</label>
+		      </div>
+	      </div>
+	      <div class="user-details">
+		      <label for="country">Choose the country you visited in last 14 days:</label>
+		      <select id="country" name="country">
+			      <option value="USA">USA</option>
+			      <option value="Italy">Italy</option>
+			      <option value="Spain">Spain</option>
+			      <option value="Spain">None</option>
+		      </select>
+		      <label for="symptoms">Do you have any symptoms:</label>
+		      <select id="symptoms" name="symptoms">
+			      <option value="Fever">Fever</option>
+			      <option value="Dry Cough">Dry Cough</option>
+			      <option value="Body ache">Body ache</option>
+			      <option value="None">None</option>
+		      </select>
+	      </div>
+	      <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+      
+      <script>
+              $("#uploadForm").submit(function (event) {
+                      event.preventDefault();
+                      var form = $(this);
+                      var url = form.attr('action');
+                      $.ajax({
+                              url: url,
+                              data: form.serialize(),
+                              type: 'POST',
+                              success: function (responseData) {
+                                      $("#responseMessage").append("Uploaded successfully:" + responseData.data.processnumber);
+                              },
+                              error: function () {
+                                      $("#responseMessage").append("error occurred");
+                              },
+                      });
+              });
+      </script>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+
