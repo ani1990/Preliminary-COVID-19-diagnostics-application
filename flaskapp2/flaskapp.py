@@ -30,7 +30,7 @@ def hello_world():
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
-    return "Admin dashboard"
+    return "Admin dashboards"
 
 
 
