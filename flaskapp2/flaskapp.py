@@ -1,4 +1,5 @@
 import os
+import ssl
 from collections import Counter
 from flask import Flask, request, render_template, redirect
 from werkzeug.utils import secure_filename
@@ -8,12 +9,17 @@ import deploy_audio_model
 #import gkiri
 #import sklearn
 #import tensorflow as tf
+import audio_converter
+
 
 app = Flask(__name__, static_url_path='/static')
+app.secret_key = 'our_secret_key'
+
+#app = Flask(__name__)
 
 app.config["IMAGE_UPLOADS"] = "/home/ubuntu/flaskapp2/static/uploads/audio"
 #app.config["IMAGE_UPLOADS"] = "/home/ubuntu"
-app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["WAV"]
+app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["WAV","MP4","MP3","AAC","3GP","FLV","OGG","SMF","M4A"]
 app.config["MAX_IMAGE_FILESIZE"] = 5 * 1024 * 1024
 
 @app.route('/')
@@ -30,7 +36,12 @@ def admin_dashboard():
 
 @app.route("/about")
 def about():
-    return "<h1 style='color: red;'>I'm a red H1 heading!</h1>"
+    return "<h1 style='color: red;'>Animesh Chutiyaa!</h1>"
+
+@app.route("/contribution")
+def contribution():
+    return "<h1 style='color: red;'>Contribution and Prize Distribution percentage: \
+            Venky-45%, Kiran-45%, Prashant-9%, Animesh-1% </h1>"
 
 @app.route("/sign-up", methods=["GET", "POST"])
 def sign_up():
@@ -50,11 +61,15 @@ def upload_image():
                 image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
                 print("image saved")
                 process_file=os.path.join(app.config["IMAGE_UPLOADS"] ,filename)
-                #print("Gkiri :",process_file)
+                print("Gkiri1 :",process_file)
+                #########################
+                audio_converter.audio_convert(process_file,process_file)
+                print("Gkiri2 :",process_file)
+                #########################
                 class1=deploy_audio_model.print_prediction_simple(process_file)
                 print("venky class1", type(class1))
                 #class1 = [0,1]
-                temp_str=str("COVID-19 Prelim Score: class1=") +str(class1[0]) + str(" class2= ")+str(class1[1])
+                temp_str=str("COVID-19 Prelim Score: =") +str(class1[0])  + str(" class2= ")+str(class1[1])
                 #return str(class1)
                 return temp_str
                 #return redirect(request.url)          
@@ -63,8 +78,8 @@ def upload_image():
             else:
                 print("invalid file extension")
 
-    return render_template("upload_image.html")
-    #return render_template("upload_audio_with_details")
+    #return render_template("prediag_backup.html")
+    return render_template("prediag.html")
 
 
 def allowed_audio(filename):
@@ -97,6 +112,21 @@ def count_me(input_str):
         response.append('"{}": {}'.format(letter, count))
     return '<br>'.join(response)
 
+@app.route("/audio", methods=["GET", "POST"])
+def upload_image1():
+    
+    if request.method == "POST":
+        if request.files['audio.data']:
+            print( "Saturday Easter")
+            file = request.files['audio_data']
+            filename = secure_filename(file.filename) 
+            file.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+            return "sat easter"
+            #return render_template("prediag_recorderjs.html", request="POST")
+        
+    return render_template("prediag_backup.html")
+
+
 #@app.route('/upload', methods=['POST'])
 #def upload_file():
 #    print request.files
@@ -109,7 +139,9 @@ def count_me(input_str):
 
 
 if __name__ == '__main__':
+    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    context.load_cert_chain('server.crt', 'server.key')
     app.debug = False
-    app.run(host='0.0.0.0',port=5000,threaded=False)
+    app.run(host='0.0.0.0',port=8080,threaded=False,ssl_context=context)
     #app.run()
     

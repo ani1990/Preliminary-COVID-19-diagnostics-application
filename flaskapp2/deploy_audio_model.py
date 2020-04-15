@@ -26,7 +26,9 @@ def print_prediction(file_name):
     prediction_feature = extract_feature(file_name)
     
     #Load pre trained model
-    model = load_model("/home/ubuntu/flaskapp2/weights.best.basic_mlp.hdf5")
+    #model = load_model("/home/ubuntu/flaskapp2/weights.best.basic_mlp.hdf5")
+    #model = load_model("/home/ubuntu/flaskapp2/weights.best.basic_cnn.hdf5")
+    model = load_model("/home/ubuntu/flaskapp2/weights.cnn_rev2.hdf5")
     predicted_vector = model.predict_classes(prediction_feature)
     predicted_class = le.inverse_transform(predicted_vector)
     print("The predicted class is:", predicted_class[0], '\n')

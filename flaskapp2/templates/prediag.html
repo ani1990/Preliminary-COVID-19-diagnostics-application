@@ -1,0 +1,120 @@
+{% extends "public_template.html" %}
+
+{% block title %}Upload{% endblock %}
+
+{% block main %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+      <h1> PreDiag : Preliminary Diagnostics of COVID-19 </h1>
+      <hr>
+
+      <form action="/upload-audio" method="POST" enctype="multipart/form-data">
+
+        <div class="form-group">
+          <label>Upload a recording of cough </label>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input"  name="image" id="image">
+            <label class="custom-file-label" for="image">Select audio file...</label>
+	  </div>
+	  <br />
+	  <br />
+	  <label> Click here to record audio (5 to 10 seconds)</label>
+	  <div class="custom-file">
+		  <input type="file" class="custom-file-input" capture name="image" id="image">
+		  <label class="custom-file-label" for="image">Click Here...</label>		  
+		  <audio id="player" control></audio>
+		  <script>
+			  const recorder = document.getElementById('image');
+                          const player =  document.getElementById('player');
+                          recorder.addEventListener('change', function(e)) {
+				  const file = e.target.files[0];
+				  const url = URL.createOnjectURL(file);
+				  player.src = url;
+			  });
+		  </script>
+	  </div>
+	  <br />
+	  <br />
+
+	  <label for="country">Choose the country you visited in last 14 days:</label>
+	  <select id="country" name="country">
+		  <option value="USA">USA</option>
+		  <option value="Italy">Italy</option>
+		  <option value="Spain">Spain</option>
+		  <option value="Spain">None</option>
+	  </select>
+	  <br />
+	  <br />
+
+
+	  <label for="symptoms">Do you have any symptoms:</label>
+	  <select id="symptoms" name="symptoms">
+		  <option value="Fever">Fever</option>
+		  <option value="Dry Cough">Dry Cough</option>
+		  <option value="Body ache">Body ache</option>
+		  <option value="Sore Throat">Sore Throat</option>
+		  <option value="None">None</option>
+	  </select>
+	  <br />
+	  <br />
+
+	  <label for="sex">What is your gender</label>
+	  <select id="sex" name="sex">
+		  <option value="Male">Male</option>
+		  <option value="Female">Female</option>
+	  </select>
+	  <br />
+	  <br />
+
+	  <label for="age">Which age group do you belong to ?</label>
+          <select id="age" name="age">
+                  <option value="age1">10-20</option>
+                  <option value="age2">21-30</option>
+                  <option value="age3">31-40</option>
+                  <option value="age4">41-50</option>
+		  <option value="age5">51-60</option>
+		  <option value="age6">61-70</option>
+		  <option value="age7">71+</option>
+
+
+
+
+          </select>
+
+
+	</div>	
+	<button type="submit" class="btn btn-primary">Upload</button>
+
+      </form>
+      
+      <script>
+	      $("#uploadForm").submit(function (event) {
+		      event.preventDefault();
+		      var form = $(this);
+		      var url = form.attr('action');
+		      $.ajax({
+			      url: url,
+			      data: form.serialize(),
+			      type: 'POST',
+			      success: function (responseData) {
+				      $("#responseMessage").append("Audio Uploaded successfully:" + responseData.data.processnumber);
+                              },
+			      error: function () {
+				      $("#responseMessage").append("error occurred");
+			      },
+		      });
+	      });
+      </script>
+
+
+    </div>
+  </div>
+</div>
+
+<!--script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script-->
+
+
+{% endblock %}
