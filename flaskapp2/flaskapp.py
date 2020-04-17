@@ -38,12 +38,12 @@ def admin_dashboard():
 
 @app.route("/about")
 def about():
-    return "<h1 style='color: red;'>Animesh Chutiyaa!</h1>"
+    return "<h1 style='color: red;'>About</h1>"
 
 @app.route("/contribution")
 def contribution():
     return "<h1 style='color: red;'>Contribution and Prize Distribution percentage: \
-            Venky-45%, Kiran-45%, Prashant-9%, Animesh-1% </h1>"
+            </h1>"
 
 @app.route("/induja", methods=["GET", "POST"])
 def sign_up():
