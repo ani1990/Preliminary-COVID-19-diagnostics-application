@@ -10,7 +10,8 @@ import deploy_audio_model
 #import sklearn
 #import tensorflow as tf
 import audio_converter
-
+from flask import jsonify
+from flask import flash
 
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = 'our_secret_key'
@@ -21,6 +22,7 @@ app.config["IMAGE_UPLOADS"] = "/home/ubuntu/flaskapp2/static/uploads/audio"
 #app.config["IMAGE_UPLOADS"] = "/home/ubuntu"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["WAV","MP4","MP3","AAC","3GP","FLV","OGG","SMF","M4A"]
 app.config["MAX_IMAGE_FILESIZE"] = 5 * 1024 * 1024
+app.config["SECRET_KEY"] = "secretKey"
 
 @app.route('/')
 def hello_world(): 
@@ -30,7 +32,7 @@ def hello_world():
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
-    return "Admin dashboards"
+    return "Admin dashboard"
 
 
 
@@ -43,9 +45,88 @@ def contribution():
     return "<h1 style='color: red;'>Contribution and Prize Distribution percentage: \
             Venky-45%, Kiran-45%, Prashant-9%, Animesh-1% </h1>"
 
-@app.route("/sign-up", methods=["GET", "POST"])
+@app.route("/induja", methods=["GET", "POST"])
 def sign_up():
-    return render_template("sign_up.html")
+    if request.method == "POST":
+        print("post req ok")
+        if 'audio_data' not in request.files:
+            print("Gkiri: audio file not not in post request")
+            #flash("No audio file")
+            return '400'
+        image = request.files['audio_data']
+        return "recording saved"
+        
+    return render_template("induja.html")
+
+@app.route("/prelim", methods=["GET", "POST"])
+def about3():
+    if request.method == "POST":
+        req= request.form
+        sex = req.get("sex")
+        print("Gkiri:Sex audio get",sex)
+        if "audio_data" in request.files:
+            image = request.files["audio_data"]
+            if image.filename == "":
+                print("No file name")
+                return redirect(request.url)
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+            print("Audio shit saved")
+
+            #######CNN Audio Recognition Model#######
+            process_file=os.path.join(app.config["IMAGE_UPLOADS"] ,filename)
+            print("Gkiri1 :",process_file)
+            #########################
+            audio_converter.audio_convert(process_file,process_file)
+            print("Gkiri2 :",process_file)
+            #########################
+            class1=deploy_audio_model.print_prediction_simple(process_file)
+            score="Your COVID19 Preliminary score is:  "+str(class1[0])
+
+            flash("Score1...!!!!!!!!!")
+            flash("Score2...!!!!!!!!!")
+            flash("Score3...!!!!!!!!!")
+            return score
+
+        else :
+            print("Gkiri: audio file not present")
+        
+    return render_template("audio_prelim2.html")
+
+@app.route("/audio2", methods=["GET", "POST"])
+def about2():
+    if request.method == "POST":
+        req= request.form
+        sex = req.get("sex")
+        #print("Gkiri:Sex audio get",sex)
+        print("Gkiri:audio post request")
+        print(request)
+        if 'audio_data' not in request.files:
+            print("Gkiri: audio file not not in post request")
+            #flash("No audio file")
+            return '400'
+        image = request.files['audio_data']
+        if image.filename == "":
+            print("No file name")   
+            return redirect(request.url)
+        if allowed_image(image.filename):
+            filename = secure_filename(image.filename)
+            print("filename OK")
+            image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+            print("Audio shit saved")     
+            process_file=os.path.join(app.config["IMAGE_UPLOADS"] ,filename)
+            print("Gkiri1 :",process_file)
+            #########################
+            audio_converter.audio_convert(process_file,process_file)
+            print("Gkiri2 :",process_file)
+            #########################
+            class1=deploy_audio_model.print_prediction_simple(process_file)       
+            score="Your COVID19 Preliminary score is:  "+str(class1[0])
+            #flash(score)
+            return score #redirect(request.url)
+    else:
+        return render_template("audio.html")
+
 
 @app.route("/upload-audio", methods=["GET", "POST"])
 def upload_image():
@@ -112,7 +193,7 @@ def count_me(input_str):
         response.append('"{}": {}'.format(letter, count))
     return '<br>'.join(response)
 
-@app.route("/audio", methods=["GET", "POST"])
+@app.route("/audio_old", methods=["GET", "POST"])
 def upload_image1():
     
     if request.method == "POST":

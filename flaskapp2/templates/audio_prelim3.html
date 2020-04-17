@@ -1,0 +1,104 @@
+{% extends "public_template_prelim.html" %} {% block title %}Upload{% endblock %} {% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1> PreDiag : Preliminary Diagnostics of COVID-19 </h1>
+            <hr>
+            <!-- <form action="/audio" method="POST" enctype="multipart/form-data"> -->
+            <div class="form-group">
+                <!-- <label for="online_audio">Please provi </label> -->
+                <label for="online_audio">Please Record Cough for 5-10 Seconds...!!! </label>
+                <div id="controls">
+                    <button id="recordButton">Record</button>
+                    <button id="stopButton" disabled>Stop</button>
+                </div>
+                <div id="formats"></div>
+                <p><strong>Recordings:</strong></p>
+                <ol id="recordingsList"></ol>
+
+            </div>
+
+            <label for="country">Choose the country you visited in last 14 days (only High Risk countries included for trial phase):</label>
+            <select id="country" name="country">
+		  <option value="China">China</option>
+                  <option value="USA">USA</option>
+                  <option value="Italy">Italy</option>
+                  <option value="Spain">Spain</option>
+		  <option value="Iran">Iran</option>
+		  <option value="France">France</option>
+		  <option value="Turkey">Spain</option>
+		  <option value="None">None</option>
+	    </select>
+            <br />
+            <br />
+            <label for="symptoms">Do you have any symptoms:</label>
+            <select id="symptoms" name="symptoms">
+                  <option value="Fever">Fever</option>
+                  <option value="Dry Cough">Dry Cough</option>
+                  <option value="Body ache">Body ache</option>
+                  <option value="Sore Throat">Sore Throat</option>
+                  <option value="None">None</option>
+	    </select>
+            <br />
+            <br />
+	    <label for="contact"> Did you have a direct contact with a COVID19 positive patient in last 14 days? </label>
+	    <seleict id="contact" name="contact">
+		    <option value="Yes">Yes</option>
+		    <option value="No">No</option>
+	    </select>
+	    <br />
+	    <br />
+            <label for="sex">What is your gender</label>
+            <select id="sex" name="sex">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+	    </select>
+            <br />
+            <br />
+            <label for="age">Which age group do you belong to ?</label>
+            <select id="age" name="age">
+                  <option value="age1">10-20</option>
+                  <option value="age2">21-30</option>
+                  <option value="age3">31-40</option>
+                  <option value="age4">41-50</option>
+                  <option value="age5">51-60</option>
+                  <option value="age6">61-70</option>
+                  <option value="age7">71+</option>
+          </select>
+            <br />
+            <br />
+            <div id="controls">
+                <button id="uploadButton" type="submit" class="btn btn-primary">Upload</button>
+            </div>
+            <br />
+            <br />
+	    <br />
+	    <br />
+	    <br />
+	    <br />
+	    <br />
+	    <br />
+	    <label for="age">WARNING:Results are based on experimental and preliminary analysis.Please consult doctor for official medical confirmation.</label>
+            <!-- </form> -->
+            <!--             <script>
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(myData),
+                    dataType: 'json',
+                    url: '/audio',
+                    success: function() {
+                        console.log("This is never getting printed!!")
+                    }
+                });
+            </script> -->
+
+        </div>
+    </div>
+</div>
+<div id="form-success"></div>
+<!--script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script-->
+
+
+{% endblock %}
